@@ -2,6 +2,8 @@
 
 **Wat eten we vanavond?** De zin die in bijna elk huis rond zessen valt. Vanavond maakt er een besluit van, op basis van wat er al in je kast ligt.
 
+**Live:** https://mariusvanderkolk-arch.github.io/vanavond-app/
+
 Een kleine, snelle webapp (PWA) in het Nederlands. Alles draait in je browser: er is geen account, geen server en geen database. Wat je aanvinkt wordt bewaard in `localStorage` op je eigen apparaat.
 
 ## Wat kan het?
@@ -66,12 +68,12 @@ De map `dist/` is een statische site. Die kun je gratis hosten.
 2. Kies deze repository, build command `npm run build`, publish directory `dist`.
 3. Klik op *Deploy*.
 
-**GitHub Pages**
-1. Bouw met het pad van je repository als basis, bijvoorbeeld `VITE_BASE=/vanavond/ npm run build`.
-2. Zet de inhoud van `dist/` op de branch `gh-pages` (bijvoorbeeld met `npx gh-pages -d dist`), of gebruik een GitHub Actions-workflow voor Pages.
-3. Zet in de repository-instellingen onder *Pages* de bron op die branch.
+**GitHub Pages** (zo draait deze repository)
+1. De workflow `.github/workflows/pages.yml` bouwt de app bij elke push naar `main`, met `VITE_BASE=/<repo-naam>/`, en zet `dist/` op GitHub Pages.
+2. Eenmalig: zet in de repository-instellingen onder *Pages* de bron op *GitHub Actions*.
+3. Zelf met de hand bouwen voor Pages kan ook: `VITE_BASE=/vanavond-app/ npm run build`.
 
-Let op: GitHub Pages voor een privé-repository vraagt om een betaald GitHub-abonnement. Vercel en Netlify werken wel gratis met privé-repositories.
+GitHub Pages is gratis voor openbare repositories. Voor een privé-repository vraagt Pages om een betaald abonnement; Vercel en Netlify werken wel gratis met privé-repositories.
 
 ## Licentie
 
