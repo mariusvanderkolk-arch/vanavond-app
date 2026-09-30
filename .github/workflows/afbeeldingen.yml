@@ -1,0 +1,55 @@
+# Haalt de receptfoto's op, maakt de PWA-iconen en zet ze in de repo.
+# Handmatig te starten via Actions → "Afbeeldingen en iconen" → Run workflow.
+name: Afbeeldingen en iconen
+
+on:
+  workflow_dispatch:
+    inputs:
+      bron:
+        description: 'Adres waar de foto’s nu staan'
+        required: true
+        default: 'https://tundra-wave-grove-berry.grok.me'
+
+permissions:
+  contents: write
+
+jobs:
+  bijwerken:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Receptfoto's en deelafbeelding ophalen
+        env:
+          BRON: ${{ inputs.bron }}
+        run: |
+          mkdir -p public/recepten
+          for naam in groentestoof kikkererwtenwrap kip-kerrie linzensoep nasi pesto-pasta risotto shakshuka spinazie-omelet stamppot zalm-citroen; do
+            curl -fsSL "$BRON/recepten/$naam.jpg" -o "public/recepten/$naam.jpg"
+          done
+          curl -fsSL "$BRON/og.jpg" -o public/og.jpg
+
+      - name: Afhankelijkheden installeren
+        run: npm install --no-audit --no-fund
+
+      - name: Iconen maken
+        run: npm run icons
+
+      - name: Controleren of de app bouwt
+        run: npm run build
+
+      - name: Wijzigingen vastleggen
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/recepten public/og.jpg public/icons/*.png package-lock.json
+          if git diff --cached --quiet; then
+            echo "Niets veranderd."
+          else
+            git commit -m "Receptfoto's, iconen en package-lock toevoegen"
+            git push
+          fi
